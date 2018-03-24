@@ -1,0 +1,185 @@
+.App {
+  text-align: center;
+  background-color: white;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 50px;
+  padding: 20px;
+  color: white;
+}
+
+.App-title {
+  font-size: 1.5em;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+.red {
+  background-color: red;
+}
+
+.blue {
+  background-color: blue;
+}
+
+.yellow {
+  background-color: yellow;
+}
+
+.black {
+  background-color: black;
+  color: white;
+}
+
+.table {
+  border-spacing: 20px;
+  border-color: white;
+  background-color: white;
+}
+
+.cell {
+  width: 160px;
+  height: 80px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.turn {
+  font-size: x-large;
+  text-align: center;
+  font-weight: bold;
+  margin-top: 30px;
+}
+
+.red-text {
+  color: red;
+  font-weight: bold;
+}
+
+.blue-text {
+  color: blue;
+  font-weight: bold;
+}
+
+.yellow-text {
+  color: #F1C40F;
+  font-weight: bold;
+}
+
+.black-text {
+  color: black;
+  font-weight: bold;
+}
+
+.words-done {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 30px;
+}
+
+.hidden {
+  display: none;
+}
+
+.codemaster-view-button {
+  background-color: gray;
+}
+
+.button {
+  cursor: pointer;
+  width: 160px;
+  height: 60px;
+  font-size: large;
+}
+
+.section-left {
+  width: 70%;
+  float: left;
+}
+
+.section-right {
+  width: 30%;
+  float: right;
+}
+
+.seconds {
+  font-size: 200px;
+  color: darkslategrey;
+  font-style: italic;
+}
+
+.board {
+  display: table;
+  margin: 0 auto;
+}
+
+.top-row-table {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.top-row {
+  height: 100px;
+}
+
+.top-row-left {
+  width: 25%;
+  height: 100%;
+}
+
+.top-row-middle {
+  width: 50%;
+  height: 100%;
+  font-size: 18px;
+}
+
+.top-row-right {
+  width: 25%;
+  height: 100%;
+}
+
+.modal-header {
+  height: 45px;
+  width: 100%;
+  background-color: #4685ae;
+  color: #fff;
+  padding-top: 10px;
+  padding-left: 15px;
+  font-size: 22px;
+}
+
+.modal-body {
+  margin: 15px;
+}
+
+.modal-buttons {
+  cursor: pointer;
+  width: 80px;
+  height: 30px;
+  margin: 10px;
+  font-size: inherit;
+}
+
+.modal-input {
+  margin-left: 10px;
+  font-size: inherit;
+}
+
+.timer-details {
+  margin-top: 10px;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
