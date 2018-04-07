@@ -24,12 +24,23 @@ class App extends Component {
           planningTime={this.state.planningTime}
           guessingTime={this.state.guessingTime} />
         <TimerDetails
+          currentPlayWithTimer={this.state.playWithTimer}
+          currentPlanningTime={this.state.planningTime}
+          currentGuessingTime={this.state.guessingTime}
           isOpen={this.state.timerSettingsOpen}
           onOpen={() => this.setState({ timerSettingsOpen: true })}
-          onClose={() => this.setState({ timerSettingsOpen: false })}
+          onClose={() => this.closeTimerSettings()}
           setTimerValues={(playWithTimer, planningTime, guessingTime) => this.updateTimerValues(playWithTimer, planningTime, guessingTime)} />
       </div>
     );
+  }
+
+  closeTimerSettings() {
+    if (this.state.planningTime === 0 || this.state.guessingTime === 0) {
+      this.setState({ timerSettingsOpen: false, playWithTimer: false, planningTime: 0, guessingTime: 0 });
+    } else {
+      this.setState({ timerSettingsOpen: false });
+    }
   }
 
   updateTimerValues(playWithTimer, planningTime, guessingTime) {

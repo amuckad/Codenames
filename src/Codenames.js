@@ -15,9 +15,9 @@ export default class Codenames extends Component {
             isBlueTurn: false,
             isGameOver: false,
             redTotal: totals.firstColor,
-            redDone: 0,
+            redRemaining: totals.firstColor,
             blueTotal: totals.secondColor,
-            blueDone: 0,
+            blueRemaining: totals.secondColor,
             codeMasterView: false,
             gameCount: 0,
             clueGiven: false,
@@ -55,12 +55,12 @@ export default class Codenames extends Component {
                                             <span
                                                 className='red-text'
                                                 hidden={this.state.isGameOver || this.state.isBlueTurn}>
-                                                    Red's turn
+                                                    {`Red ${this.state.clueGiven ? 'Players\'' : 'Codemaster\'s'} turn`}
                                             </span>
                                             <span
                                                 className='blue-text'
                                                 hidden={this.state.isGameOver || this.state.isRedTurn}>
-                                                    Blue's turn
+                                                    {`Blue ${this.state.clueGiven ? 'Players\'' : 'Codemaster\'s'} turn`}
                                             </span>
                                             <span
                                                 className={`${this.getWinner().toLowerCase()}-text`}
@@ -69,10 +69,10 @@ export default class Codenames extends Component {
                                             </span>
                                         </div>
 
-                                        <div className='words-done'>
-                                            <div className={`red-text ${oddGameCount ? 'hidden' : ''}`}>{`Words done: ${this.state.redDone}/${this.state.redTotal}`}</div>
-                                            <div className='blue-text'>{`Words done: ${this.state.blueDone}/${this.state.blueTotal}`}</div>
-                                            <div className={`red-text ${!oddGameCount ? 'hidden' : ''}`}>{`Words done: ${this.state.redDone}/${this.state.redTotal}`}</div>
+                                        <div className='words-remaining'>
+                                            <div className={`red-text ${oddGameCount ? 'hidden' : ''}`}>{`Words remaining: ${this.state.redRemaining}/${this.state.redTotal}`}</div>
+                                            <div className='blue-text'>{`Words remaining: ${this.state.blueRemaining}/${this.state.blueTotal}`}</div>
+                                            <div className={`red-text ${!oddGameCount ? 'hidden' : ''}`}>{`Words remaining: ${this.state.redRemaining}/${this.state.redTotal}`}</div>
                                         </div>
                                     </td>
                                     <td className='top-row-right'>
@@ -194,13 +194,13 @@ export default class Codenames extends Component {
 
     continueTurn() {
         if (this.state.isRedTurn) {
-            const newCount = this.state.redDone + 1;
-            const gameOver = newCount === this.state.redTotal;
-            this.setState({ redDone: newCount, isGameOver: gameOver, gameStarted: !gameOver });
+            const newCount = this.state.redRemaining - 1;
+            const gameOver = newCount === 0;
+            this.setState({ redRemaining: newCount, isGameOver: gameOver, gameStarted: !gameOver });
         } else if (this.state.isBlueTurn) {
-            const newCount = this.state.blueDone + 1;
-            const gameOver = newCount === this.state.blueTotal;
-            this.setState({ blueDone: newCount, isGameOver: gameOver, gameStarted: !gameOver });
+            const newCount = this.state.blueRemaining - 1;
+            const gameOver = newCount === 0;
+            this.setState({ blueRemaining: newCount, isGameOver: gameOver, gameStarted: !gameOver });
         }
     }
 
@@ -208,22 +208,22 @@ export default class Codenames extends Component {
         const currentRedTurn = this.state.isRedTurn;
         const currentBlueTurn = this.state.isBlueTurn;
         if (color === colors.Red) {
-            const newCount = this.state.redDone + 1;
-            const gameOver = newCount === this.state.redTotal;
-            this.setState({ clueGiven: false, isRedTurn: !currentRedTurn, isBlueTurn: !currentBlueTurn, redDone: newCount, isGameOver: gameOver, gameStarted: !gameOver });
+            const newCount = this.state.redRemaining - 1;
+            const gameOver = newCount === 0;
+            this.setState({ clueGiven: false, isRedTurn: !currentRedTurn, isBlueTurn: !currentBlueTurn, redRemaining: newCount, isGameOver: gameOver, gameStarted: !gameOver });
         } else if (color === colors.Blue) {
-            const newCount = this.state.blueDone + 1;
-            const gameOver = newCount === this.state.blueTotal;
-            this.setState({ clueGiven: false, isRedTurn: !currentRedTurn, isBlueTurn: !currentBlueTurn, blueDone: newCount, isGameOver: gameOver, gameStarted: !gameOver });
+            const newCount = this.state.blueRemaining - 1;
+            const gameOver = newCount === 0;
+            this.setState({ clueGiven: false, isRedTurn: !currentRedTurn, isBlueTurn: !currentBlueTurn, blueRemaining: newCount, isGameOver: gameOver, gameStarted: !gameOver });
         } else {
             this.setState({ clueGiven: false, isRedTurn: !currentRedTurn, isBlueTurn: !currentBlueTurn });
         }
     }
 
     getWinner() {
-        if (this.state.redDone === this.state.redTotal) {
+        if (this.state.redRemaining === 0) {
             return 'Red';
-        } else if (this.state.blueDone === this.state.blueTotal) {
+        } else if (this.state.blueRemaining === 0) {
             return 'Blue';
         } else if (this.state.isRedTurn) {
             return 'Blue';
@@ -245,9 +245,9 @@ export default class Codenames extends Component {
             isBlueTurn: oddGameCount,
             isGameOver: false,
             redTotal,
-            redDone: 0,
+            redRemaining: redTotal,
             blueTotal,
-            blueDone: 0,
+            blueRemaining: blueTotal,
             codeMasterView: false,
             gameCount: newGameCount,
             clueGiven: false

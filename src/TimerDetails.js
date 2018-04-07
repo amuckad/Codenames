@@ -43,14 +43,14 @@ export default class TimerDetails extends Component {
                         onClick={() => this.props.onOpen()}
                         value='Edit Timer Settings' />
                     {
-                        this.state.playWithTimer &&
+                        this.props.currentPlayWithTimer &&
                         <div>
-                            <div className='timer-details'>{`Planning Time: ${this.state.planningTime} seconds`}</div>
-                            <div className='timer-details'>{`Guessing Time: ${this.state.guessingTime} seconds`}</div>
+                            <div className='timer-details'>{`Planning Time: ${this.props.currentPlanningTime} seconds`}</div>
+                            <div className='timer-details'>{`Guessing Time: ${this.props.currentGuessingTime} seconds`}</div>
                         </div>
                     }
                     {
-                        !this.state.playWithTimer &&
+                        !this.props.currentPlayWithTimer &&
                         <div>Playing without timer</div>
                     }
                 </div>
@@ -92,16 +92,35 @@ export default class TimerDetails extends Component {
                         <input
                             type='button'
                             className='modal-buttons'
-                            onClick={() => this.props.setTimerValues(this.state.playWithTimer, this.state.planningTime, this.state.guessingTime)}
+                            onClick={() => this.checkAndSetTimerValues()}
                             value='OK' />
                         <input
                             type='button'
                             className='modal-buttons'
-                            onClick={() => this.props.onClose()}
+                            onClick={() => {
+                                this.setState({
+                                    playWithTimer: this.props.currentPlayWithTimer,
+                                    planningTime: this.props.currentPlanningTime,
+                                    guessingTime: this.props.currentGuessingTime
+                                });
+                                this.props.onClose();
+                            }}
                             value='Close' />
                     </div>
                 </Modal>
             </div>
         );
+    }
+
+    checkAndSetTimerValues() {
+        if (this.state.playWithTimer) {
+            if (this.state.planningTime === 0 || this.state.guessingTime === 0) {
+                alert('Timer values cannot be 0');
+            } else {
+                this.props.setTimerValues(true, this.state.planningTime, this.state.guessingTime);
+            }
+        } else {
+            this.props.setTimerValues(false, 0, 0);
+        }
     }
 }
