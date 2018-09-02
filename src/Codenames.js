@@ -5,12 +5,18 @@ import Timer from './Timer';
 import { colors, totals } from './Constants';
 import { wordList } from './words';
 
+const seedrandom = require('seedrandom');
+
 export default class Codenames extends Component {
     componentWillMount() {
+        const seed = window.prompt("Seed: ", "");
+        const colorMapResponse = this.getColorMap(totals.firstColor, seed);
         this.setState({
             gameStarted: false,
-            words: this.getWords(),
-            colorMap: this.getColorMap(totals.firstColor),
+            seed: seed,
+            words: this.getWords(seed),
+            colorMap: colorMapResponse[0],
+            lastFirstColor: colorMapResponse[1],
             isRedTurn: true,
             isBlueTurn: false,
             isGameOver: false,
@@ -117,6 +123,13 @@ export default class Codenames extends Component {
                                 && this.newGame()}
                             value='Next Game' />
                     </div>
+                    <div>
+                        <input
+                            type='button'
+                            className='button'
+                            onClick={() => window.confirm('Are you sure you want to switch colors?') && this.switchColors()}
+                            value='Switch Color' />
+                    </div>
                 </div>
                 {
                     this.state.playWithTimer &&
@@ -148,11 +161,12 @@ export default class Codenames extends Component {
         );
     }
 
-    getWords() {
+    getWords(seed) {
         const length = wordList.length;
         const indices = [];
+        const randFunc = seedrandom(seed);
         while (indices.length < totals.allWords) {
-            const random = Math.floor(Math.random() * length);
+            const random = Math.floor(randFunc() * length);
             if (!indices.some(index => index === random)) {
                 indices.push(random);
             }
@@ -164,13 +178,15 @@ export default class Codenames extends Component {
         return words;
     }
 
-    getColorMap(redTotal) {
+    getColorMap(redTotal, seed) {
         const colorMap = ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
         let numberList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
         let maxElement = numberList.length;
         let filled = 0;
+        let lastFirstColor = -1;
+        const randFunc = seedrandom(seed);
         while (maxElement > 0) {
-            const random = Math.floor(Math.random() * maxElement);
+            const random = Math.floor(randFunc() * maxElement);
             if (random >= maxElement) {
                 continue;
             }
@@ -188,8 +204,11 @@ export default class Codenames extends Component {
             numberList[maxElement - 1] = swap;
             maxElement -= 1;
             filled += 1;
+            if (filled === totals.firstColor) {
+                lastFirstColor = numberList[maxElement];
+            }
         }
-        return colorMap;
+        return [colorMap, lastFirstColor];
     }
 
     continueTurn() {
@@ -233,14 +252,45 @@ export default class Codenames extends Component {
     }
 
     newGame() {
+        const seed = window.prompt("Seed: ", "");
+        const newGameCount = (this.state.gameCount + 1) % 2;
+        const oddGameCount = (newGameCount % 2) > 0;
+        const redTotal = oddGameCount ? totals.secondColor : totals.firstColor;
+        const blueTotal = oddGameCount ? totals.firstColor : totals.secondColor;
+        const colorMapResponse = this.getColorMap(redTotal, seed);
+        this.setState({
+            gameStarted: false,
+            seed: seed,
+            words: this.getWords(seed),
+            colorMap: colorMapResponse[0],
+            lastFirstColor: colorMapResponse[1],
+            isRedTurn: !oddGameCount,
+            isBlueTurn: oddGameCount,
+            isGameOver: false,
+            redTotal,
+            redRemaining: redTotal,
+            blueTotal,
+            blueRemaining: blueTotal,
+            codeMasterView: false,
+            gameCount: newGameCount,
+            clueGiven: false
+        });
+    }
+
+    switchColors() {
+        const newColorMap = [ ...this.state.colorMap ];
+        if (newColorMap[this.state.lastFirstColor] === colors.Red) {
+            newColorMap[this.state.lastFirstColor] = colors.Blue;
+        } else if (newColorMap[this.state.lastFirstColor] === colors.Blue) {
+            newColorMap[this.state.lastFirstColor] = colors.Red;
+        }
         const newGameCount = (this.state.gameCount + 1) % 2;
         const oddGameCount = (newGameCount % 2) > 0;
         const redTotal = oddGameCount ? totals.secondColor : totals.firstColor;
         const blueTotal = oddGameCount ? totals.firstColor : totals.secondColor;
         this.setState({
             gameStarted: false,
-            words: this.getWords(),
-            colorMap: this.getColorMap(redTotal),
+            colorMap: newColorMap,
             isRedTurn: !oddGameCount,
             isBlueTurn: oddGameCount,
             isGameOver: false,
