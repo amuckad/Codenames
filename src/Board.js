@@ -21,16 +21,18 @@ export default class Board extends Component {
         const colorMap = this.props.colorMap;
 
         return (
-            <table className='table'>
+            <body class='bg-light text-center'>
+            <table class='table'>
                 <tbody>
                     {
                         [0, 1, 2, 3, 4].map(row => {
-                            return <tr key={row}>
+                            return <tr class="primary" key={row}>
                                 {
                                     [0, 1, 2, 3, 4].map(col => {
                                         const index = row * 5 + col;
                                         return <td key={index}>
                                             <input
+                                                class='btn btn-sm'
                                                 type='button'
                                                 className={`cell ${this.state.wordSelected[index] ?
                                                     colorMap[index] :
@@ -46,6 +48,7 @@ export default class Board extends Component {
                     }
                 </tbody>
             </table>
+            </body>
         );
     }
 

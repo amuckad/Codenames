@@ -4,6 +4,7 @@ import Codenames from './Codenames';
 import TimerDetails from './TimerDetails';
 
 class App extends Component {
+
   componentWillMount() {
     this.setState({
       playWithTimer: true,
@@ -15,20 +16,33 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <h1 className="App-title">Welcome to Codenames!</h1>
-        </header>
-        <Codenames
-          playWithTimer={this.state.playWithTimer}
-          planningTime={this.state.planningTime}
-          guessingTime={this.state.guessingTime} />
-        <TimerDetails
-          isOpen={this.state.timerSettingsOpen}
-          onOpen={() => this.setState({ timerSettingsOpen: true })}
-          onClose={() => this.setState({ timerSettingsOpen: false })}
-          setTimerValues={(playWithTimer, planningTime, guessingTime) => this.updateTimerValues(playWithTimer, planningTime, guessingTime)} />
+      <html>
+
+      <div class="container">
+
+      <div class="row">
+
+         <div class="col-md-12">
+
+          <Codenames
+            playWithTimer={this.state.playWithTimer}
+            planningTime={this.state.planningTime}
+            guessingTime={this.state.guessingTime} />
+        </div>
       </div>
+
+      <div class="row align-items-end">
+
+         <div class="col-md-2 text-center">
+           <TimerDetails
+              isOpen={this.state.timerSettingsOpen}
+              onOpen={() => this.setState({ timerSettingsOpen: true })}
+              onClose={() => this.setState({ timerSettingsOpen: false })}
+              setTimerValues={(playWithTimer, planningTime, guessingTime) => this.updateTimerValues(playWithTimer, planningTime, guessingTime)} />
+          </div>
+       </div>
+       </div>
+      </html>
     );
   }
 

@@ -1,6 +1,5 @@
-.App {
-  text-align: center;
-  background-color: white;
+.background {
+    background-image: url("./images/blackcodename.jpg");
 }
 
 .App-logo {

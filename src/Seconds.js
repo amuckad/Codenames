@@ -3,8 +3,8 @@ import './App.css';
 
 export default function Seconds (props) {
     return (
-        <div>
-            <span className='seconds'>{props.seconds}</span>
-        </div>
+        <p>
+             <p class="text-secondary"><span class="glyphicon glyphicon-time"> {props.seconds} </span>  </p>
+        </p>
     );
 }

@@ -4,8 +4,32 @@ import Board from './Board';
 import Timer from './Timer';
 import { colors, totals } from './Constants';
 import { wordList } from './words';
+import * as Modal from 'react-modal';
 
 export default class Codenames extends Component {
+
+    customModalStyles = {
+        content: {
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            padding: 0,
+            background: 'rgb(255, 255, 255)',
+            transform: 'translate(-50%, -50%)',
+            overlfow: 'scroll',
+            maxHeight: '70%',
+            maxWidth: '30%',
+            overflowX: 'hidden',
+            overflowY: 'auto'
+        },
+        overlay: {
+            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+            overflow: 'hidden',
+            zIndex: 7000
+        }
+    };
+
     componentWillMount() {
         this.setState({
             gameStarted: false,
@@ -36,59 +60,101 @@ export default class Codenames extends Component {
     render () {
         const oddGameCount = (this.state.gameCount % 2) > 0;
         return (
-            <div>
-                <div className='section-left'>
-                    <div>
-                        <table className='top-row-table'>
-                            <tbody>
-                                <tr className='top-row'>
-                                    <td className='top-row-left'>
-                                        <input
-                                            type='button'
-                                            className='button cell'
-                                            disabled={this.state.clueGiven}
-                                            onClick={() => this.setState({ clueGiven: true })}
-                                            value='Clue Given' />
-                                    </td>
-                                    <td className='top-row-middle'>
-                                        <div className='turn'>
-                                            <span
-                                                className='red-text'
-                                                hidden={this.state.isGameOver || this.state.isBlueTurn}>
-                                                    Red's turn
-                                            </span>
-                                            <span
-                                                className='blue-text'
-                                                hidden={this.state.isGameOver || this.state.isRedTurn}>
-                                                    Blue's turn
-                                            </span>
-                                            <span
-                                                className={`${this.getWinner().toLowerCase()}-text`}
-                                                hidden={!this.state.isGameOver}>
-                                                    {`${this.getWinner()} Wins!`}
-                                            </span>
-                                        </div>
+            <body class='bg-light background height: 100px'>
 
-                                        <div className='words-done'>
-                                            <div className={`red-text ${oddGameCount ? 'hidden' : ''}`}>{`Words done: ${this.state.redDone}/${this.state.redTotal}`}</div>
-                                            <div className='blue-text'>{`Words done: ${this.state.blueDone}/${this.state.blueTotal}`}</div>
-                                            <div className={`red-text ${!oddGameCount ? 'hidden' : ''}`}>{`Words done: ${this.state.redDone}/${this.state.redTotal}`}</div>
-                                        </div>
-                                    </td>
-                                    <td className='top-row-right'>
-                                        <input
-                                            type='button'
-                                            className='button cell'
-                                            disabled={!this.state.clueGiven}
-                                            onClick={() => this.changeTurn()}
-                                            value='End Turn' />
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+            <div class="container bg-light">
+            <h1> <p class='text-secondary text-center'> <small> Let's Play </small> <lead> CODENAMES ! </lead> </p> </h1>
+              <h4>
+                <div class="row align-items-start mt-5">
+                    <div className='turn' class="col-md-6">
+                        <span
+                            className='red-text'
+                            class='text-danger'
+                            hidden={this.state.isGameOver || this.state.isBlueTurn}>
+                                Red's turn
+                        </span>
+                        <span
+                            className='blue-text'
+                            class='text-primary'
+                            hidden={this.state.isGameOver || this.state.isRedTurn}>
+                                Blue's turn
+                        </span>
+                        <span
+                            className={`${this.getWinner().toLowerCase()}-text`}
+                            hidden={!this.state.isGameOver}>
+                                {`${this.getWinner()} Wins!`}
+                        </span>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="col-md-4">
+                        <div className={`red-text ${oddGameCount ? 'hidden' : ''}`}><p class='text-danger'>{` Words done: ${this.state.redDone}/${this.state.redTotal}`} </p></div>
+                        </div>
+                        <div class="col-md-4">
+                        <div className='blue-text'><p class='text-primary'>{`Words done: ${this.state.blueDone}/${this.state.blueTotal}`}</p></div>
+                        </div>
+                        <div class="col-md-4">
+                        <div className={`red-text ${!oddGameCount ? 'hidden' : ''}`}><p class='text-danger'>{`Words done: ${this.state.redDone}/${this.state.redTotal}`}</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row align-items-start mt-5">
+
+                    <div class="col-md-3">
+                            <Timer
+                                gameStarted={this.state.gameStarted}
+                                clueGiven={this.state.clueGiven}
+                                codeMasterSecondsRem={this.state.planningTime}
+                                guessingSecondsRem={this.state.guessingTime}
+                                timeUp={() => {
+                                    if (this.state.clueGiven) {
+                                        this.changeTurn();
+                                    } else {
+                                        this.setState({ clueGiven: true });
+                                    }
+                                }} />
                     </div>
 
-                    <div className='board'>
+                    <div class="col-md-3">
+                {
+                    this.state.playWithTimer &&
+
+                            <button type="button"
+                                    class="btn btn-info btn-lg" 
+                                    disabled={this.state.gameStarted} 
+                                    onClick={() => this.setState({ gameStarted: true })}>
+                              <span class="glyphicon glyphicon-play"></span> Play
+                            </button>
+                }
+                    </div>
+
+                    <div class="col-md-3">
+                        <button
+                            type='button'
+                            className={`button ${this.state.codeMasterView ? 'codemaster-view-button' : ''}`}
+                            onClick={() => this.setState({ codeMasterView: !this.state.codeMasterView })}
+                            value='Code Master View'
+                            class='btn btn-info btn-lg'>
+                            Code Master View
+                        </button>
+                    </div>
+
+                    <div class="col-md-3">
+                        <button
+                            type='button'
+                            className='button'
+                            onClick={() => (this.state.isGameOver || window.confirm('Are you sure you want to start a new game?'))
+                                && this.newGame()}
+                            value='New Game'
+                            class='btn btn-info btn-lg'> New Game
+                            </button>
+                    </div>
+
+                </div>
+                </h4>
+
+                <div class='row align-items-center mt-5'>
+                    <div className='board' class='col-md-12'>
                         <Board
                             gameCount={this.state.gameCount}
                             words={this.state.words}
@@ -101,50 +167,42 @@ export default class Codenames extends Component {
                             turnChanged={color => this.changeTurn(color)}
                             gameOver={() => this.setState({ isGameOver: true, gameStarted: false })} />
                     </div>
-                    
-                    <div>
-                        <input
-                            type='button'
-                            className={`button ${this.state.codeMasterView ? 'codemaster-view-button' : ''}`}
-                            onClick={() => this.setState({ codeMasterView: !this.state.codeMasterView })}
-                            value='Code Master View' />
-                    </div>
-                    <div>
-                        <input
-                            type='button'
-                            className='button'
-                            onClick={() => (this.state.isGameOver || window.confirm('Are you sure you want to start a new game?'))
-                                && this.newGame()}
-                            value='Next Game' />
-                    </div>
                 </div>
-                {
-                    this.state.playWithTimer &&
-                    <div className='section-right'>
-                        <br /><br />
-                        <input
-                            type='button'
-                            className='button'
-                            disabled={this.state.gameStarted}
-                            onClick={() => this.setState({ gameStarted: true })}
-                            value='Start Game' />
-                        <br /><br />
 
-                        <Timer
-                            gameStarted={this.state.gameStarted}
-                            clueGiven={this.state.clueGiven}
-                            codeMasterSecondsRem={this.state.planningTime}
-                            guessingSecondsRem={this.state.guessingTime}
-                            timeUp={() => {
-                                if (this.state.clueGiven) {
-                                    this.changeTurn();
-                                } else {
-                                    this.setState({ clueGiven: true });
-                                }
-                            }} />
+                <div class='row align-items-end mt-2'>
+
+                    <div class='col-md-4'>
                     </div>
-                }
-            </div>
+                    <div class='col-md-4'>
+                        <div class='row'>
+                            <div class='col-md-6'>
+                                <input
+                                    type='button'
+                                    className='button cell'
+                                    disabled={this.state.clueGiven}
+                                    onClick={() => this.setState({ clueGiven: true })}
+                                    value='Clue Given'
+                                    class='btn btn-info btn-lg' />
+                            </div>
+                            <div class='col-md-6'>
+                                <input
+                                    type='button'
+                                    className='button cell'
+                                    disabled={!this.state.clueGiven}
+                                    onClick={() => this.changeTurn()}
+                                    value='End Turn'
+                                    class='btn btn-info btn-lg' />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class='col-md-4'>
+
+                    </div>
+
+                </div>
+        </div>
+        </body>
         );
     }
 
@@ -161,6 +219,7 @@ export default class Codenames extends Component {
         for (let i = 0; i < totals.allWords; i++) {
             words.push(wordList[indices[i]].toUpperCase());
         }
+
         return words;
     }
 
@@ -253,4 +312,6 @@ export default class Codenames extends Component {
             clueGiven: false
         });
     }
+
+    
 }

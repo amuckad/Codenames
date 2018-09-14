@@ -40,15 +40,8 @@ export default class Timer extends Component {
 
     render() {
         return (
-            <div>
-                <div>
-                    <input
-                        type='button'
-                        className='button'
-                        value={this.state.isPaused ? 'Continue' : 'Pause'}
-                        onClick={() => this.switchPause()} />
-                </div>
-                <div>
+            <div class='row'>
+            <div class='col-md-3'>
                     {
                         this.props.clueGiven &&
                         <Seconds
@@ -59,7 +52,17 @@ export default class Timer extends Component {
                         <Seconds
                             seconds={this.state.codeMasterSecondsRem} />
                     }
-                </div>
+            </div>
+            <div class='col-md-3'>
+
+                    <button
+                        class='btn btn-info btn-lg'
+                        type='button'
+                        value={this.state.isPaused ? 'Continue' : 'Pause'}
+                        onClick={() => this.switchPause()}>
+                        <span class="glyphicon glyphicon-pause"></span> Pause
+                    </button>
+            </div>
             </div>
         );
     }

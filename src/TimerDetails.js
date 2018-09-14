@@ -38,8 +38,8 @@ export default class TimerDetails extends Component {
             <div>
                 <div>
                     <input
+                        class='btn btn-info'
                         type='button'
-                        className='button'
                         onClick={() => this.props.onOpen()}
                         value='Edit Timer Settings' />
                     {
